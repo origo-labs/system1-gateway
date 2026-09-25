@@ -77,6 +77,7 @@ decision and deterministic code validates it.
 - Extraction of amounts, temperatures, email addresses, and ticket IDs
 - `accepted`, `abstained`, and `escalated` decision states
 - Separate `auto_executable` safety decision for low-risk routes
+- Decide-model task outputs, span evidence, and constraint-feasibility metadata
 - Dry-run action adapter with idempotency protection
 - CLI, JSONL stream, and local HTTP interfaces
 - Warm-up/readiness and source provenance reporting
@@ -168,6 +169,10 @@ uv run system1-evaluate fixtures/ops_sample.jsonl --model
 The report separates intent accuracy, policy acceptance coverage, and
 `auto_route_coverage`. The bundled operations fixture is a regression example,
 not a claim of production accuracy.
+
+With `GLiNER2.5-Decide`, the envelope also includes `decision.tasks`,
+`decision.spans`, and `decision.constraints`. Domain packs can declare extra
+typed heads such as urgency, multi-label tags, or ordered severity values.
 
 ## Development
 

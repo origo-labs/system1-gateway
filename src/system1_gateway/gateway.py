@@ -58,10 +58,18 @@ class LocalGateway:
 
     def decide(self, text: str) -> tuple[Decision, float]:
         started = time.perf_counter()
+        task_outputs: dict[str, object] = {}
+        model_spans: dict[str, list[dict]] = {}
         if self._decide_api:
-            result = self.model.classify_text(
-                text, {"intent": [item.name for item in self.config.intents]}, include_confidence=True
-            )
+            intent_task = type("Task", (), {"name": "intent", "labels": [item.name for item in self.config.intents]})()
+            task_specs = [intent_task] + [task for task in self.config.tasks if task.name != "intent"]
+            task_input = {task.name: task.labels for task in task_specs}
+            result = self.model.classify_text(text, task_input, include_confidence=True)
+            task_outputs = result
+            entity_labels = [item.name for item in self.config.entities]
+            if entity_labels:
+                span_result = self.model.extract_entities(text, entity_labels, include_spans=True)
+                model_spans = span_result.get("entities", {})
             task = result["intent"]
             label = task["label"] if isinstance(task, dict) else task
             confidence = float(task.get("confidence", 0.0)) if isinstance(task, dict) else 0.0
@@ -80,6 +88,7 @@ class LocalGateway:
         except ValueError:
             intent = label
         entities = extract_entities(text, self.config)
+        constraints = self._check_constraints(task_outputs)
         lower = text.lower()
         # A deployment without an explicit production target is not a
         # production-deploy decision. Keep the semantic layer conservative.
@@ -96,7 +105,20 @@ class LocalGateway:
         return Decision(intent=intent, severity=severity, entities=entities,
                         route=configured.route if configured else ROUTES.get(intent, "human_triage"), requires_approval=approval,
                         confidence=confidence, action=action,
-                        rationale="GLiNER2.5 local classification"), elapsed_ms
+                        rationale="GLiNER2.5 local classification", tasks=task_outputs,
+                        spans=model_spans, constraints=constraints), elapsed_ms
+
+    def _check_constraints(self, outputs: dict[str, object]) -> dict[str, object]:
+        violations = []
+        for rule in self.config.constraints:
+            task = outputs.get(rule.get("when_task"), {})
+            value = task.get("label") if isinstance(task, dict) else task
+            if value == rule.get("when_value"):
+                target = outputs.get(rule.get("requires_task"), {})
+                target_value = target.get("label") if isinstance(target, dict) else target
+                if target_value != rule.get("requires_value"):
+                    violations.append(rule)
+        return {"feasible": not violations, "violations": violations}
 
     def decide_request(self, request: GatewayRequest) -> DecisionEnvelope:
         started = time.perf_counter()
