@@ -132,6 +132,49 @@ The packaged `src/system1_gateway/default_config.json` is the single default
 domain pack. A custom pack can override intent descriptions, routes, approval
 requirements, and confidence thresholds without changing Python code.
 
+### Domain-pack schema
+
+A domain pack is a JSON object with these fields:
+
+| Field | Type | Purpose |
+| --- | --- | --- |
+| `schema_version` | string | Version of the decision contract. |
+| `confidence_threshold` | number | Default acceptance threshold from 0 to 1. |
+| `intent_thresholds` | object | Optional per-intent threshold overrides. |
+| `intents` | array | Required intent labels, descriptions, routes, and approval rules. Include `unknown`. |
+| `tasks` | array | Optional Decide heads such as urgency or severity. Each task has `name`, `kind`, `labels`, and optional `descriptions` and `threshold`. |
+| `entities` | array | Optional domain entities. Each entity has `name`, `description`, a named-capture `pattern`, and optional `required_for` intents. |
+| `constraints` | array | Optional cross-task rules using `when_task`, `when_value`, `requires_task`, and `requires_value`. |
+
+Example:
+
+```json
+{
+  "schema_version": "ops.v1",
+  "confidence_threshold": 0.72,
+  "intent_thresholds": {"production_deploy": 0.90},
+  "intents": [
+    {"name": "production_deploy", "description": "Deploy software to production", "route": "release", "requires_approval": true},
+    {"name": "unknown", "description": "Unsupported or ambiguous request", "route": "human_triage"}
+  ],
+  "tasks": [
+    {"name": "urgency", "kind": "single", "labels": ["low", "high"]}
+  ],
+  "entities": [
+    {"name": "service", "description": "Service being deployed", "pattern": "\\bdeploy\\s+(?P<service>[A-Za-z0-9_-]+)", "required_for": ["production_deploy"]}
+  ],
+  "constraints": [
+    {"when_task": "intent", "when_value": "production_deploy", "requires_task": "urgency", "requires_value": "high"}
+  ]
+}
+```
+
+`tasks` and `constraints` are used by the Decide adapter. `entities.pattern`
+is a Python regular expression; use a named capture matching the entity name
+when the extracted value should be returned. Model span evidence is exposed in
+`decision.spans`, while deterministic pattern matches remain in
+`decision.entities`.
+
 ## Safety model
 
 The model never directly executes a privileged action:
@@ -181,6 +224,3 @@ uv sync
 uv run pytest -q tests
 uv build
 ```
-
-See [PLAN.md](PLAN.md) and [REFINEMENT_PLAN.md](REFINEMENT_PLAN.md) for the
-design and implementation history.
