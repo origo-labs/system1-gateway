@@ -44,6 +44,9 @@ class Decision(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     action: str
     rationale: str
+    tasks: dict[str, Any] = Field(default_factory=dict)
+    spans: dict[str, list[dict[str, Any]]] = Field(default_factory=dict)
+    constraints: dict[str, Any] = Field(default_factory=dict)
 
 
 class PolicyResult(BaseModel):

@@ -2,6 +2,7 @@
   "schema_version": "system1.v1",
   "confidence_threshold": 0.72,
   "intent_thresholds": {"billing_duplicate_charge": 0.68, "cancellation_request": 0.72, "production_deploy": 0.90, "cold_chain_alert": 0.90, "suspicious_login": 0.90},
+  "tasks": [{"name": "urgency", "kind": "single", "labels": ["low", "medium", "high", "critical"], "descriptions": {"low": "Routine request", "medium": "Time-sensitive operational request", "high": "Serious operational impact", "critical": "Immediate threat or outage"}}],
   "entities": [{"name": "service", "description": "The application, product, component, or service being deployed.", "pattern": "\\b(?:deploy|release|ship|publish)\\s+(?P<service>[A-Za-z][A-Za-z0-9_-]*(?:\\s+[A-Za-z][A-Za-z0-9_-]*)*?)\\s+to\\s+(?:prod|production|live)\\b", "required_for": ["production_deploy"]}],
   "intents": [
     {"name": "billing_duplicate_charge", "description": "A customer reports two identical charges, a duplicate card payment, or being billed twice for one order. Not a general invoice correction or plan change.", "route": "billing_queue", "requires_approval": false},

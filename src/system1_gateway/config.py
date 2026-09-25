@@ -19,12 +19,22 @@ class EntityConfig(BaseModel):
     required_for: list[str] = Field(default_factory=list)
 
 
+class TaskConfig(BaseModel):
+    name: str
+    kind: str = "single"
+    labels: list[str] = Field(min_length=1)
+    descriptions: dict[str, str] = Field(default_factory=dict)
+    threshold: float = Field(default=0.5, ge=0, le=1)
+
+
 class GatewayConfig(BaseModel):
     schema_version: str = "system1.v1"
     confidence_threshold: float = Field(default=0.75, ge=0, le=1)
     intent_thresholds: dict[str, float] = Field(default_factory=dict)
     intents: list[IntentConfig] = Field(min_length=1)
     entities: list[EntityConfig] = Field(default_factory=list)
+    tasks: list[TaskConfig] = Field(default_factory=list)
+    constraints: list[dict[str, str]] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_unique_intents(self) -> "GatewayConfig":
