@@ -1,0 +1,20 @@
+{"text":"I was billed twice for the same order, ticket INC-1042","intent":"billing_duplicate_charge"}
+{"text":"There are two identical card payments for 49 EUR","intent":"billing_duplicate_charge"}
+{"text":"Can someone investigate this duplicate charge?","intent":"billing_duplicate_charge"}
+{"text":"Please ship checkout version 2.4 to production","intent":"production_deploy"}
+{"text":"Release the approved build to prod after the window opens","intent":"production_deploy"}
+{"text":"Deploy the payments service","intent":"unknown"}
+{"text":"The freezer is at -12 C and rising","intent":"cold_chain_alert"}
+{"text":"Warehouse temperature is 9 C, above the safe limit","intent":"cold_chain_alert"}
+{"text":"Cold-chain sensor INC-88 reports a temperature excursion","intent":"cold_chain_alert"}
+{"text":"I do not recognize this login from Stockholm","intent":"suspicious_login"}
+{"text":"Unknown sign-in detected on my account","intent":"suspicious_login"}
+{"text":"Was this login from a new device?","intent":"suspicious_login"}
+{"text":"Cancel my subscription at the end of this month","intent":"cancellation_request"}
+{"text":"Please close my account and stop renewal","intent":"cancellation_request"}
+{"text":"Can I change my plan?","intent":"unknown"}
+{"text":"The dashboard is slow today","intent":"unknown"}
+{"text":"Send this to the team","intent":"unknown"}
+{"text":"My invoice has the wrong company name","intent":"unknown"}
+{"text":"The loading dock door is stuck open","intent":"unknown"}
+{"text":"Contact me at ops@example.com about CASE-77","intent":"unknown"}

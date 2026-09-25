@@ -1,0 +1,31 @@
+[project]
+name = "gliner-system1-gateway"
+version = "0.1.0"
+description = "An on-device System-1 gateway for fast structured operational decisions"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "gliner2[local]>=2.0.0",
+    "protobuf>=7.36.2",
+    "pydantic>=2.0",
+]
+
+[project.scripts]
+system1-gateway = "system1_gateway.cli:main"
+system1-demo = "system1_gateway.demo:main"
+system1-report = "system1_gateway.report:main"
+system1-evaluate = "system1_gateway.evaluate:main"
+system1-stream = "system1_gateway.stream:main"
+system1-http = "system1_gateway.http:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/system1_gateway"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

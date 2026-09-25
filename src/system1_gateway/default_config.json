@@ -1,0 +1,14 @@
+{
+  "schema_version": "system1.v1",
+  "confidence_threshold": 0.72,
+  "intent_thresholds": {"billing_duplicate_charge": 0.68, "cancellation_request": 0.72, "production_deploy": 0.90, "cold_chain_alert": 0.90, "suspicious_login": 0.90},
+  "entities": [{"name": "service", "description": "The application, product, component, or service being deployed.", "pattern": "\\b(?:deploy|release|ship|publish)\\s+(?P<service>[A-Za-z][A-Za-z0-9_-]*(?:\\s+[A-Za-z][A-Za-z0-9_-]*)*?)\\s+to\\s+(?:prod|production|live)\\b", "required_for": ["production_deploy"]}],
+  "intents": [
+    {"name": "billing_duplicate_charge", "description": "A customer reports two identical charges, a duplicate card payment, or being billed twice for one order. Not a general invoice correction or plan change.", "route": "billing_queue", "requires_approval": false},
+    {"name": "production_deploy", "description": "A request to release, ship, publish, or deploy a software build or service to production or prod. Not a request to deploy only to staging or test.", "route": "release_management", "requires_approval": true},
+    {"name": "cold_chain_alert", "description": "A facility, freezer, refrigerator, warehouse, or cold-chain temperature excursion or sensor alert, including a reading above or below a safe limit.", "route": "facilities_on_call", "requires_approval": false},
+    {"name": "suspicious_login", "description": "A report of an unknown, unrecognized, anomalous, or suspicious account login or sign-in, including a new device or location.", "route": "security_operations", "requires_approval": false},
+    {"name": "cancellation_request", "description": "A request to cancel, close, terminate, or stop renewal of a subscription, service, account, or order. Not a request to change plans.", "route": "retention_queue", "requires_approval": true},
+    {"name": "unknown", "description": "Unsupported, ambiguous, or unrelated operational content that does not clearly match billing duplication, production deployment, temperature alert, suspicious login, or cancellation.", "route": "human_triage", "requires_approval": false}
+  ]
+}

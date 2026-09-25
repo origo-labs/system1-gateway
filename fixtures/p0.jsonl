@@ -1,0 +1,25 @@
+{"text":"My card was charged twice", "intent":"billing_duplicate_charge"}
+{"text":"Please deploy checkout to production", "intent":"production_deploy"}
+{"text":"Warehouse temperature is 9 C", "intent":"cold_chain_alert"}
+{"text":"Suspicious login from an unknown country", "intent":"suspicious_login"}
+{"text":"Cancel my subscription", "intent":"cancellation_request"}
+{"text":"Duplicate charge on invoice", "intent":"billing_duplicate_charge"}
+{"text":"Can you deploy the API to production?", "intent":"production_deploy"}
+{"text":"Cold chain temperature alert", "intent":"cold_chain_alert"}
+{"text":"Unknown login detected", "intent":"suspicious_login"}
+{"text":"I want a cancellation", "intent":"cancellation_request"}
+{"text":"I was charged twice for the same order", "intent":"billing_duplicate_charge"}
+{"text":"Production deploy requested", "intent":"production_deploy"}
+{"text":"The freezer temperature is too high", "intent":"cold_chain_alert"}
+{"text":"There was an unknown login", "intent":"suspicious_login"}
+{"text":"Please cancel this service", "intent":"cancellation_request"}
+{"text":"Two charges appeared", "intent":"billing_duplicate_charge"}
+{"text":"Deploy checkout production", "intent":"production_deploy"}
+{"text":"Temperature alert at the warehouse", "intent":"cold_chain_alert"}
+{"text":"Unknown country login", "intent":"suspicious_login"}
+{"text":"Subscription cancellation", "intent":"cancellation_request"}
+{"text":"What is the weather today?", "intent":"unknown"}
+{"text":"Tell me a joke", "intent":"unknown"}
+{"text":"Summarize this document", "intent":"unknown"}
+{"text":"Find my order", "intent":"unknown"}
+{"text":"Hello there", "intent":"unknown"}
