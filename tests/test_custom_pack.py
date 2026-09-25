@@ -56,3 +56,17 @@ def test_decide_adapter_keeps_tasks_and_spans() -> None:
     decision, _ = gateway.decide("Please deploy checkout")
     assert decision.tasks["urgency"]["label"] == "high"
     assert decision.spans["service"][0]["text"] == "checkout"
+
+
+def test_decide_adapter_reports_constraint_violation() -> None:
+    config = GatewayConfig.model_validate({"intents": [
+        {"name": "production_deploy", "description": "A production deployment", "route": "release"},
+        {"name": "unknown", "description": "Unsupported content", "route": "human_triage"},
+    ], "tasks": [{"name": "urgency", "labels": ["low", "high"]}], "constraints": [{
+        "when_task": "intent", "when_value": "production_deploy",
+        "requires_task": "urgency", "requires_value": "critical",
+    }]})
+    gateway = LocalGateway(model_name="fastino/GLiNER2.5-Decide", config=config, classifier=FakeDecide())
+    decision, _ = gateway.decide("Please deploy checkout")
+    assert decision.constraints["feasible"] is False
+    assert len(decision.constraints["violations"]) == 1
